@@ -76,7 +76,7 @@ class AppTextStyles {
   static const plantDescription = TextStyle(
     fontFamily: 'Afacad',
     fontWeight: .w400,
-    fontSize: 7,
+    fontSize: 11,
     color: AppColors.mutedTextColor,
   );
 
