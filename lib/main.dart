@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:plants_app_ui/constants/string_const.dart';
-import 'package:plants_app_ui/presentation/screens/welcome_screen.dart';
 import 'package:plants_app_ui/routing/router.dart';
 
 void main() {
