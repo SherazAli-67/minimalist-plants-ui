@@ -1,0 +1,188 @@
+Coding and project structure guidelines
+
+1. Use dot shot hands in entire project
+2. Use one line for each property, like below
+
+Container(
+      decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          shape: .circle,
+          border: .all(color: AppColors.primaryGreenColor, width: 5)
+      ),
+      padding: .symmetric(horizontal: 10, vertical: 4),
+      child: Image.asset(cartItem, height: 40, width: 26,),
+)
+Except for such cases Images, instead of
+
+ Text(
+StringConst.teamMembers,
+ style: AppTextStyles.taskMeta,
+),
+
+use
+Text(StringConst.ongoingTasks, style: AppTextStyles.sectionTitle,),
+
+3. Create dummy data in the app lib/core/app_data.dart to use it in the project
+4. If the project uses the data other than string then create models first in the directory
+
+ lib/core/models
+and each model class must end with 'Model' suffix such as ProductModel
+ and then create their list in the
+  lib/core/app_data.dart
+
+and then use it where needed
+
+5. Make sure to use flutter_svg for svg icons as below  in one line
+
+SvgPicture.asset(AppIcons.icDelete, colorFilter: .mode(Colors.black, .srcIn),
+
+6. Only use go_router for the routing as per the current structure
+
+7. Do not add comments to the code
+
+8. Note the followings
+
+instead of
+
+onSelected: (index) {
+                  setState(() {
+                    _selectedDayIndex = index;
+                  });
+                },
+
+use
+onSelected: (index)=> setState(()=> _selectedDayIndex = index),
+
+instead of
+
+ TimelineTaskCard(
+                            task: AppData.timelineTasks[i],
+                          ),
+
+use
+ TimelineTaskCard(task: AppData.timelineTasks[i],)
+
+If any code is possible in one-line, make it to one line
+
+9. Use spacing parameter for giving spacing in column or row items.
+Do not use SizedBox between Column or Row children for gaps.
+
+instead of
+
+Column(
+  children: [
+    _buildHeaderRow(),
+    const SizedBox(height: 10),
+    Expanded(child: _buildOfferCarousel()),
+  ],
+)
+
+use
+
+Column(
+  spacing: 10,
+  children: [
+    _buildHeaderRow(),
+    Expanded(child: _buildOfferCarousel()),
+  ],
+)
+
+10. The widgets directory lib/presentation/widgets should only contain the widgets that are used by multiple screens. If any widget is being used only one screen then keep it within that screen by creating their builder
+  Widget _buildCartItemWidget({required String cartItem}) {
+    return Container(
+      decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          shape: .circle,
+          border: .all(color: AppColors.primaryGreenColor, width: 5)
+      ),
+      padding: .symmetric(horizontal: 10, vertical: 4),
+      child: Image.asset(cartItem, height: 40, width: 26,),
+    );
+  }
+
+11. All the icons and images path should be set in the lib/core/asset_res.dart file in below format
+class AssetRes {
+  static const _imagesPath = 'assets/images/';
+  static const _iconsPath = 'assets/images/';
+
+  static const welcomePageImg = '${_imagesPath}welcome_page_plant.png';
+
+  static const icCart = '${_iconsPath}ic_cart.svg';
+}
+
+12. Shared screen padding must be applied once from a parent Padding.
+Do not pad the header block and a sibling list/carousel separately with the same horizontal padding.
+
+instead of
+
+Column(
+  children: [
+    Padding(
+      padding: .fromLTRB(20, 16, 20, 0),
+      child: Column(children: [header, search, title]),
+    ),
+    Expanded(
+      child: ListView(
+        padding: .fromLTRB(20, 0, 20, 16),
+        ...
+      ),
+    ),
+  ],
+)
+
+use
+
+Padding(
+  padding: .fromLTRB(NumberConstant.horizontalPadding, 16, NumberConstant.horizontalPadding, 0),
+  child: Column(
+    spacing: 10,
+    children: [
+      Column(
+        spacing: 17,
+        children: [header, search, title],
+      ),
+      Expanded(
+        child: ListView(
+          padding: .only(bottom: 16),
+          ...
+        ),
+      ),
+    ],
+  ),
+)
+
+13. Do not size icons or circular/square action shapes with fixed width and height.
+Use padding around the icon/content instead. Images may still use width/height when needed.
+
+instead of
+
+SizedBox(
+  width: 52,
+  height: 52,
+  child: Center(
+    child: SvgPicture.asset(AssetRes.icFilter, height: 16, width: 21, colorFilter: .mode(AppColors.whiteColor, .srcIn),),
+  ),
+)
+
+use
+
+Padding(
+  padding: .symmetric(horizontal: 15.5, vertical: 18),
+  child: SvgPicture.asset(AssetRes.icFilter, colorFilter: .mode(AppColors.whiteColor, .srcIn),),
+)
+
+14. Put reusable numeric layout values in lib/constants/number_constant.dart and use them across the project.
+String copy belongs in lib/constants/string_const.dart.
+
+Example:
+
+class NumberConstant {
+  static const horizontalPadding = 20.0;
+  static const offerCardWidth = 257.0;
+  static const offerCardHeight = 367.0;
+  static const offerCardGap = 20.0;
+}
+
+Use NumberConstant.horizontalPadding (and other constants) instead of hard-coded numbers for shared layout values.
+
+15. Use provider package for state management instead of setState

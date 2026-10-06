@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            _buildCartBar(context),
+            if (context.watch<CartProvider>().hasItems) _buildCartBar(context),
           ],
         ),
       ),

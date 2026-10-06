@@ -1,6 +1,5 @@
 import 'package:plants_app_ui/constants/string_const.dart';
 import 'package:plants_app_ui/core/asset_res.dart';
-import 'package:plants_app_ui/core/models/cart_item_model.dart';
 import 'package:plants_app_ui/core/models/category_model.dart';
 import 'package:plants_app_ui/core/models/plant_model.dart';
 import 'package:plants_app_ui/core/models/promo_offer_model.dart';
@@ -65,13 +64,6 @@ class AppData {
       AssetRes.ledgerBlockPlantImg,
     ],
   );
-
-  static const cartItems = [
-    CartItemModel(plant: pottedHead, quantity: 1),
-    CartItemModel(plant: ledgerBlock, quantity: 2),
-    CartItemModel(plant: friendlyFern, quantity: 3),
-    CartItemModel(plant: miniCacti, quantity: 1),
-  ];
 
   static const deliveryAmount = 25.50;
 }

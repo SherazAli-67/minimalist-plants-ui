@@ -16,4 +16,5 @@ class StringConst {
   static const piece = 'piece';
   static const pieces = 'pieces';
   static const items = 'items';
+  static const emptyCart = 'Your cart is empty';
 }

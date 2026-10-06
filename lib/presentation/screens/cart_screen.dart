@@ -27,8 +27,12 @@ class CartScreen extends StatelessWidget {
             spacing: NumberConstant.sectionSpacing,
             children: [
               _buildHeader(cartProvider),
-              Expanded(child: _buildCartList(cartProvider)),
-              _buildSummary(cartProvider),
+              Expanded(
+                child: cartProvider.hasItems
+                    ? _buildCartList(cartProvider)
+                    : Center(child: Text(StringConst.emptyCart, style: AppTextStyles.sectionTitle,),),
+              ),
+              if (cartProvider.hasItems) _buildSummary(cartProvider),
             ],
           ),
         ),
@@ -59,11 +63,11 @@ class CartScreen extends StatelessWidget {
     return ListView.separated(
       itemCount: items.length,
       separatorBuilder: (context, index) => Divider(color: AppColors.dividerColor, height: NumberConstant.cartItemGap,),
-      itemBuilder: (context, index) => _buildCartItem(item: items[index]),
+      itemBuilder: (context, index) => _buildCartItem(context: context, item: items[index]),
     );
   }
 
-  Widget _buildCartItem({required CartItemModel item}) {
+  Widget _buildCartItem({required BuildContext context, required CartItemModel item}) {
     final quantityLabel = item.quantity == 1
         ? '${item.quantity} ${StringConst.piece}'
         : '${item.quantity} ${StringConst.pieces}';
@@ -85,7 +89,34 @@ class CartScreen extends StatelessWidget {
                 spacing: NumberConstant.contentSpacing,
                 children: [
                   Text(item.plant.name, style: AppTextStyles.cartItemName,),
-                  Text(quantityLabel, style: AppTextStyles.cartItemQuantity,),
+                  Row(
+                    spacing: 8,
+                    children: [
+                      GestureDetector(
+                        onTap: () => context.read<CartProvider>().decrementQuantity(item.plant.id),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.cardGrayColor,
+                            shape: .circle,
+                          ),
+                          padding: .all(4),
+                          child: Icon(Icons.remove, color: AppColors.secondaryTextColor, size: 16,),
+                        ),
+                      ),
+                      Text(quantityLabel, style: AppTextStyles.cartItemQuantity,),
+                      GestureDetector(
+                        onTap: () => context.read<CartProvider>().incrementQuantity(item.plant.id),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.cardGrayColor,
+                            shape: .circle,
+                          ),
+                          padding: .all(4),
+                          child: Icon(Icons.add, color: AppColors.secondaryTextColor, size: 16,),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ],
