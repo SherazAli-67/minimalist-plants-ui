@@ -8,6 +8,7 @@ import 'package:plants_app_ui/core/app_data.dart';
 import 'package:plants_app_ui/core/app_textstyles.dart';
 import 'package:plants_app_ui/core/asset_res.dart';
 import 'package:plants_app_ui/core/models/plant_model.dart';
+import 'package:plants_app_ui/presentation/widgets/circular_plant_thumb.dart';
 import 'package:plants_app_ui/routing/router.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -336,29 +337,9 @@ class _HomeScreenState extends State<HomeScreen> {
           items.length,
           (index) => Positioned(
             left: index * NumberConstant.cartThumbOverlap,
-            child: _buildCircularPlantThumb(image: items[index].plant.image),
+            child: CircularPlantThumb(image: items[index].plant.image),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildCircularPlantThumb({required String image}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.cardGrayColor,
-        shape: .circle,
-        border: .all(color: AppColors.whiteColor),
-      ),
-      padding: .symmetric(
-        horizontal: NumberConstant.cartThumbPaddingH,
-        vertical: NumberConstant.cartThumbPaddingV,
-      ),
-      child: Image.asset(
-        image,
-        height: NumberConstant.cartThumbImageHeight,
-        width: NumberConstant.cartThumbImageWidth,
-        fit: .contain,
       ),
     );
   }
