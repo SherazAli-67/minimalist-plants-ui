@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:plants_app_ui/constants/number_constant.dart';
 import 'package:plants_app_ui/constants/string_const.dart';
 import 'package:plants_app_ui/core/app_colors.dart';
-import 'package:plants_app_ui/core/app_data.dart';
 import 'package:plants_app_ui/core/app_textstyles.dart';
 import 'package:plants_app_ui/core/models/cart_item_model.dart';
+import 'package:plants_app_ui/providers/cart_provider.dart';
 import 'package:plants_app_ui/presentation/widgets/circular_plant_thumb.dart';
+import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = context.watch<CartProvider>();
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -24,9 +26,9 @@ class CartScreen extends StatelessWidget {
           child: Column(
             spacing: NumberConstant.sectionSpacing,
             children: [
-              _buildHeader(),
-              Expanded(child: _buildCartList()),
-              _buildSummary(),
+              _buildHeader(cartProvider),
+              Expanded(child: _buildCartList(cartProvider)),
+              _buildSummary(cartProvider),
             ],
           ),
         ),
@@ -34,8 +36,8 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
-    final cartCount = AppData.cartItems.length;
+  Widget _buildHeader(CartProvider cartProvider) {
+    final cartCount = cartProvider.itemCount;
     return Row(
       mainAxisAlignment: .spaceBetween,
       children: [
@@ -52,11 +54,12 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCartList() {
+  Widget _buildCartList(CartProvider cartProvider) {
+    final items = cartProvider.items;
     return ListView.separated(
-      itemCount: AppData.cartItems.length,
+      itemCount: items.length,
       separatorBuilder: (context, index) => Divider(color: AppColors.dividerColor, height: NumberConstant.cartItemGap,),
-      itemBuilder: (context, index) => _buildCartItem(item: AppData.cartItems[index]),
+      itemBuilder: (context, index) => _buildCartItem(item: items[index]),
     );
   }
 
@@ -100,7 +103,7 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSummary() {
+  Widget _buildSummary(CartProvider cartProvider) {
     return Column(
       spacing: NumberConstant.summaryTopGap,
       children: [
@@ -108,7 +111,7 @@ class CartScreen extends StatelessWidget {
           mainAxisAlignment: .spaceBetween,
           children: [
             Text(StringConst.deliveryAmount, style: AppTextStyles.deliveryLabel,),
-            Text('\$${AppData.deliveryAmount.toStringAsFixed(2)}', style: AppTextStyles.deliveryAmount,),
+            Text('\$${cartProvider.deliveryAmount.toStringAsFixed(2)}', style: AppTextStyles.deliveryAmount,),
           ],
         ),
         Divider(color: AppColors.dividerColor, height: 1,),
@@ -116,7 +119,7 @@ class CartScreen extends StatelessWidget {
           mainAxisAlignment: .spaceBetween,
           children: [
             Text(StringConst.totalAmount, style: AppTextStyles.totalLabel,),
-            Text('\$${AppData.cartTotal.toStringAsFixed(2)}', style: AppTextStyles.totalAmount,),
+            Text('\$${cartProvider.cartTotal.toStringAsFixed(2)}', style: AppTextStyles.totalAmount,),
           ],
         ),
         _buildPaymentButton(),

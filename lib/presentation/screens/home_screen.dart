@@ -8,24 +8,15 @@ import 'package:plants_app_ui/core/app_data.dart';
 import 'package:plants_app_ui/core/app_textstyles.dart';
 import 'package:plants_app_ui/core/asset_res.dart';
 import 'package:plants_app_ui/core/models/plant_model.dart';
+import 'package:plants_app_ui/providers/cart_provider.dart';
 import 'package:plants_app_ui/presentation/widgets/circular_plant_thumb.dart';
 import 'package:plants_app_ui/routing/router.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
+import '../../providers/home_provider.dart';
+
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedCategoryIndex = 0;
-  final Set<String> _favoriteIds = {};
-
-  List<PlantModel> get _filteredPlants {
-    final category = AppData.categories[_selectedCategoryIndex].name;
-    return AppData.plants.where((plant) => plant.category == category).toList();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +40,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         _buildHeaderRow(),
                         _buildPromoBanner(),
-                        _buildCategoryChips(),
+                        _buildCategoryChips(context),
                         _buildCollectionsHeader(),
                       ],
                     ),
-                    Expanded(child: _buildPlantCards()),
+                    Expanded(child: _buildPlantCards(context)),
                   ],
                 ),
               ),
@@ -142,7 +133,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCategoryChips() {
+  Widget _buildCategoryChips(BuildContext context) {
+    final homeProvider = context.watch<HomeProvider>();
     return SingleChildScrollView(
       scrollDirection: .horizontal,
       child: Row(
@@ -150,9 +142,9 @@ class _HomeScreenState extends State<HomeScreen> {
         children: List.generate(
           AppData.categories.length,
           (index) {
-            final isSelected = _selectedCategoryIndex == index;
+            final isSelected = homeProvider.selectedCategoryIndex == index;
             return GestureDetector(
-              onTap: () => setState(() => _selectedCategoryIndex = index),
+              onTap: () => context.read<HomeProvider>().selectCategory(index),
               child: Container(
                 decoration: BoxDecoration(
                   color: isSelected ? AppColors.blackColor : AppColors.chipGrayColor,
@@ -186,20 +178,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildPlantCards() {
-    final plants = _filteredPlants;
+  Widget _buildPlantCards(BuildContext context) {
+    final plants = context.watch<HomeProvider>().filteredPlants;
     if (plants.isEmpty) return const SizedBox.shrink();
     return ListView.separated(
       scrollDirection: .horizontal,
       padding: .only(bottom: NumberConstant.screenBottomPadding),
       itemCount: plants.length,
       separatorBuilder: (context, index) => const SizedBox(width: NumberConstant.plantCardGap),
-      itemBuilder: (context, index) => _buildPlantCard(plant: plants[index]),
+      itemBuilder: (context, index) => _buildPlantCard(context: context, plant: plants[index]),
     );
   }
 
-  Widget _buildPlantCard({required PlantModel plant}) {
-    final isFavorite = _favoriteIds.contains(plant.id);
+  Widget _buildPlantCard({required BuildContext context, required PlantModel plant}) {
+    final isFavorite = context.watch<HomeProvider>().isFavorite(plant.id);
     return Container(
       width: 220,
       decoration: BoxDecoration(
@@ -213,36 +205,38 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(child: Image.asset(plant.image, fit: .cover,),),
           Text(plant.name, style: AppTextStyles.plantName, textAlign: .center,),
           Text(plant.description, style: AppTextStyles.plantDescription, textAlign: .center,),
-          // const Spacer(),
           Row(
             mainAxisAlignment: .spaceBetween,
             spacing: 15,
             children: [
               Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.blackColor,
-                    borderRadius: .circular(NumberConstant.addToCartRadius),
-                  ),
-                  padding: .fromLTRB(8, 5, 15, 5),
-                  child: Row(
-                    spacing: NumberConstant.contentSpacing,
-                    mainAxisSize: .min,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          shape: .circle,
+                child: GestureDetector(
+                  onTap: () => context.read<CartProvider>().addToCart(plant),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.blackColor,
+                      borderRadius: .circular(NumberConstant.addToCartRadius),
+                    ),
+                    padding: .fromLTRB(8, 5, 15, 5),
+                    child: Row(
+                      spacing: NumberConstant.contentSpacing,
+                      mainAxisSize: .min,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.whiteColor,
+                            shape: .circle,
+                          ),
+                          padding: .all(NumberConstant.addToCartIconPadding),
+                          child: SvgPicture.asset(AssetRes.icCart,),
                         ),
-                        padding: .all(NumberConstant.addToCartIconPadding),
-                        child: SvgPicture.asset(AssetRes.icCart,),
-                      ),
-                      Text(StringConst.addToCart, style: AppTextStyles.addToCart,),
-                    ],
+                        Text(StringConst.addToCart, style: AppTextStyles.addToCart,),
+                      ],
+                    ),
                   ),
                 ),
               ),
-              _buildFavoriteButton(plantId: plant.id, isFavorite: isFavorite),
+              _buildFavoriteButton(context: context, plantId: plant.id, isFavorite: isFavorite),
             ],
           ),
         ],
@@ -250,9 +244,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFavoriteButton({required String plantId, required bool isFavorite}) {
+  Widget _buildFavoriteButton({
+    required BuildContext context,
+    required String plantId,
+    required bool isFavorite,
+  }) {
     return GestureDetector(
-      onTap: () => setState(() => isFavorite ? _favoriteIds.remove(plantId) : _favoriteIds.add(plantId)),
+      onTap: () => context.read<HomeProvider>().toggleFavorite(plantId),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.blackColor,
@@ -269,7 +267,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCartBar(BuildContext context) {
-    final cartCount = AppData.cartItems.length;
+    final cartProvider = context.watch<CartProvider>();
+    final cartCount = cartProvider.itemCount;
     return GestureDetector(
       onTap: () => context.push(NamedRoutes.cart.routeName),
       child: Container(
@@ -316,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 const Spacer(),
-                _buildCartThumbs(),
+                _buildCartThumbs(cartProvider),
               ],
             ),
           ],
@@ -325,8 +324,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCartThumbs() {
-    final items = AppData.cartItems;
+  Widget _buildCartThumbs(CartProvider cartProvider) {
+    final items = cartProvider.items;
+    if (items.isEmpty) return const SizedBox.shrink();
     return SizedBox(
       width: NumberConstant.cartThumbImageWidth +
           (NumberConstant.cartThumbPaddingH * 2) +

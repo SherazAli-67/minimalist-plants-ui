@@ -74,7 +74,4 @@ class AppData {
   ];
 
   static const deliveryAmount = 25.50;
-
-  static double get cartTotal =>
-      cartItems.fold<double>(0, (sum, item) => sum + item.totalPrice) + deliveryAmount;
 }
