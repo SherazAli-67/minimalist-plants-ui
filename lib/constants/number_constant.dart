@@ -1,10 +1,13 @@
 class NumberConstant {
   static const horizontalPadding = 24.0;
-  static const welcomeTitleTop = 81.0;
+  static const welcomeTitleTop = 40.0;
   static const welcomeTitleWidth = 173.0;
   static const welcomeTitleLineHeight = 130.0;
+  static const welcomeTitleLineGap = 11.0;
+  static const welcomeTitleLineWidth = 1.0;
   static const welcomePlantSize = 334.0;
-  static const goButtonPadding = 44.0;
+  static const goButtonPadding = 50.0;
+  static const welcomeBottomPadding = 40.0;
   static const homeHeaderTop = 30.0;
   static const homeTitleWidth = 214.0;
   static const drawerButtonRadius = 12.0;

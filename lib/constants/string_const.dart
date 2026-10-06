@@ -1,5 +1,6 @@
 class StringConst {
   static const appTitle = 'Minimalist Plant App';
+  static const appFontFamily = 'Afacad';
   static const welcomeTitle = 'Plant a tree for life';
   static const go = 'GO';
   static const homeTitlePrefix = 'Let’s Make our lives ';
