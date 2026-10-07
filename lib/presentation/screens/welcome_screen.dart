@@ -124,12 +124,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
             //width, height: welcomeTitleLineWidth
             Container(
               color: AppColors.blackColor,
+              width: NumberConstant.welcomeTitleLineWidth,
+              height: NumberConstant.welcomeTitleLineHeight,
             ),
             SizedBox(
               width: NumberConstant.welcomeTitleWidth,
               //welcomeTitle
               child: Text(
-                '',
+                StringConst.welcomeTitle,
                 textAlign: .center,
                 style: AppTextStyles.welcomeTitle,
               ),
@@ -146,9 +148,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
       child: ScaleTransition(
         scale: _imageScale,
         child: ScaleTransition(
-          scale: _breathScale,
-          //welcomePageImage, width:welcomePlantSize, fit: contain
-          child: const SizedBox()
+            scale: _breathScale,
+            //welcomePageImage, width:welcomePlantSize, fit: contain
+            child: Image.asset(AssetRes.welcomePageImg, width: NumberConstant.welcomePlantSize, fit: .contain,)
         ),
       ),
     );
@@ -165,12 +167,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
             onTap: _onGoPressed,
             child: Container(
               decoration: BoxDecoration(
-                // color: AppColors.blackColor,
+                color: AppColors.blackColor,
                 shape: .circle,
               ),
               padding: .all(NumberConstant.goButtonPadding),
               //StringConst.go, goButton
-
+              child: Text(StringConst.go, style: AppTextStyles.goButton,),
             ),
           ),
         ),
