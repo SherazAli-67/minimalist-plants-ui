@@ -58,46 +58,42 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildHeaderRow() {
     return Row(
-      crossAxisAlignment: .start,
+      crossAxisAlignment: .center,
       mainAxisAlignment: .spaceBetween,
       children: [
         SizedBox(
           width: NumberConstant.homeTitleWidth,
           child: Text.rich(
             TextSpan(
-              text: StringConst.homeTitlePrefix,
+              //homeTitlePrefix, homeTitle
+              text: '',
               style: AppTextStyles.homeTitle,
               children: [
-                TextSpan(text: StringConst.homeTitleHighlight, style: AppTextStyles.homeTitleBold,),
+                //homeTitleHighlight
+                TextSpan(text:'', style: AppTextStyles.homeTitleBold,),
               ],
             ),
           ),
         ),
-        _buildDrawerButton(),
+        Container(
+          decoration: BoxDecoration(
+            // borderRadius: .circular(NumberConstant.drawerButtonRadius),
+            // border: .all(color: AppColors.blackColor),
+          ),
+          padding: .symmetric(
+            horizontal: NumberConstant.drawerButtonPaddingH,
+            vertical: NumberConstant.drawerButtonPaddingV,
+          ),
+          //icDrawer
+        )
       ],
     );
   }
-
-  Widget _buildDrawerButton() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: .circular(NumberConstant.drawerButtonRadius),
-        border: .all(color: AppColors.blackColor),
-      ),
-      padding: .symmetric(
-        horizontal: NumberConstant.drawerButtonPaddingH,
-        vertical: NumberConstant.drawerButtonPaddingV,
-      ),
-      child: SvgPicture.asset(AssetRes.icDrawer,),
-    );
-  }
-
   Widget _buildPromoBanner() {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.promoGrayColor,
+        //promoGrayColor
         borderRadius: .circular(NumberConstant.promoBannerRadius),
       ),
       padding: .symmetric(
@@ -111,22 +107,18 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: .start,
             spacing: NumberConstant.contentSpacing,
             children: [
-              Text(AppData.promoOffer.title, style: AppTextStyles.promoTitle,),
-              Text(AppData.promoOffer.dateRange, style: AppTextStyles.promoDate,),
+              //AppData.promoOffer.title, promoTitle
+
+              //AppData.promoOffer.dateRange, promoDate
             ],
           ),
           Row(
             spacing: NumberConstant.contentSpacing,
             children: AppData.promoOffer.imagePaths
-                .map(
-                  (image) => Image.asset(
-                    image,
-                    width: NumberConstant.promoImageWidth,
-                    height: NumberConstant.promoImageHeight,
-                    fit: .contain,
-                  ),
-                )
-                .toList(),
+                .map((image) => const SizedBox()
+                //image, promoImageWidthHeigh
+
+                ).toList(),
           ),
         ],
       ),
@@ -143,23 +135,22 @@ class HomeScreen extends StatelessWidget {
           AppData.categories.length,
           (index) {
             final isSelected = homeProvider.selectedCategoryIndex == index;
+            String category = AppData.categories[index].name;
             return GestureDetector(
               onTap: () => context.read<HomeProvider>().selectCategory(index),
               child: Container(
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.blackColor : AppColors.chipGrayColor,
+                  // color: isSelected ? AppColors.blackColor : AppColors.chipGrayColor,
                   borderRadius: .circular(NumberConstant.categoryChipRadius),
                 ),
                 padding: .symmetric(
                   horizontal: NumberConstant.categoryChipPaddingH,
                   vertical: NumberConstant.categoryChipPaddingV,
                 ),
-                child: Text(
-                  AppData.categories[index].name,
-                  style: AppTextStyles.chipLabel.copyWith(
-                    color: isSelected ? AppColors.whiteColor : AppColors.blackColor,
-                  ),
-                ),
+                child:const SizedBox()
+
+                 //category, chipLabel.copyWith: isSelected ? white : black
+
               ),
             );
           },
@@ -172,8 +163,8 @@ class HomeScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: .spaceBetween,
       children: [
-        Text(StringConst.plantCollections, style: AppTextStyles.sectionTitle,),
-        Icon(Icons.arrow_forward, color: AppColors.blackColor,),
+        //plantsCollections, sectionTitle
+        //Icons.arrow_forward
       ],
     );
   }
@@ -195,16 +186,17 @@ class HomeScreen extends StatelessWidget {
     return Container(
       width: 220,
       decoration: BoxDecoration(
-        color: AppColors.cardGrayColor,
+        // color: AppColors.cardGrayColor,
         borderRadius: .circular(NumberConstant.plantCardRadius),
       ),
       padding: .all(NumberConstant.plantCardPadding),
       child: Column(
         spacing: NumberConstant.contentSpacing,
         children: [
-          Expanded(child: Image.asset(plant.image, fit: .cover,),),
-          Text(plant.name, style: AppTextStyles.plantName, textAlign: .center,),
-          Text(plant.description, style: AppTextStyles.plantDescription, textAlign: .center,),
+          //plant.image, fit: containt
+          Expanded(child: const SizedBox()),
+          //plant.name, plantName, .center
+          //plant.description, plantDescription, center
           Row(
             mainAxisAlignment: .spaceBetween,
             spacing: 15,
@@ -214,7 +206,7 @@ class HomeScreen extends StatelessWidget {
                   onTap: () => context.read<CartProvider>().addToCart(plant),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppColors.blackColor,
+                      // color: AppColors.blackColor,
                       borderRadius: .circular(NumberConstant.addToCartRadius),
                     ),
                     padding: .fromLTRB(8, 5, 15, 5),
@@ -224,13 +216,14 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
+                            // color: AppColors.whiteColor,
                             shape: .circle,
                           ),
                           padding: .all(NumberConstant.addToCartIconPadding),
-                          child: SvgPicture.asset(AssetRes.icCart,),
+                          //icCart
+                          child: const SizedBox()
                         ),
-                        Text(StringConst.addToCart, style: AppTextStyles.addToCart,),
+                        //addToCart, addToCart
                       ],
                     ),
                   ),
@@ -253,15 +246,17 @@ class HomeScreen extends StatelessWidget {
       onTap: () => context.read<HomeProvider>().toggleFavorite(plantId),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.blackColor,
+          // color: AppColors.blackColor,
           shape: .circle,
         ),
         padding: .all(NumberConstant.favoriteButtonPadding),
-        child: Icon(
+        child: const SizedBox()
+
+        /*Icon(
           isFavorite ? Icons.favorite : Icons.favorite_border,
           color: AppColors.whiteColor,
           size: 16,
-        ),
+        ),*/
       ),
     );
   }

@@ -14,8 +14,7 @@ class WelcomeScreen extends StatefulWidget {
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen>
-    with TickerProviderStateMixin {
+class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateMixin {
   static const _entranceDuration = Duration(milliseconds: 900);
   static const _exitDuration = Duration(milliseconds: 280);
   static const _breathDuration = Duration(milliseconds: 2400);
@@ -41,72 +40,23 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   void initState() {
     super.initState();
 
-    _entranceController = AnimationController(
-      vsync: this,
-      duration: _entranceDuration,
-    );
-    _breathController = AnimationController(
-      vsync: this,
-      duration: _breathDuration,
-    );
-    _exitController = AnimationController(
-      vsync: this,
-      duration: _exitDuration,
-    );
-    _pressController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 120),
-    );
+    _entranceController = AnimationController(vsync: this, duration: _entranceDuration,);
+    _breathController = AnimationController(vsync: this, duration: _breathDuration,);
+    _exitController = AnimationController(vsync: this, duration: _exitDuration,);
+    _pressController = AnimationController(vsync: this, duration: const Duration(milliseconds: 120),);
 
-    _titleFade = CurvedAnimation(
-      parent: _entranceController,
-      curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
-    );
-    _titleSlide = Tween<Offset>(
-      begin: const Offset(0, 0.18),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _entranceController,
-        curve: const Interval(0.0, 0.45, curve: Curves.easeOutCubic),
-      ),
-    );
+    _titleFade = CurvedAnimation(parent: _entranceController, curve: const Interval(0.0, 0.4, curve: Curves.easeOut),);
+    _titleSlide = Tween<Offset>(begin: const Offset(0, 0.18), end: Offset.zero,).animate(CurvedAnimation(parent: _entranceController, curve: const Interval(0.0, 0.45, curve: Curves.easeOutCubic),),);
 
-    _imageFade = CurvedAnimation(
-      parent: _entranceController,
-      curve: const Interval(0.25, 0.7, curve: Curves.easeOut),
-    );
-    _imageScale = Tween<double>(begin: 0.92, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _entranceController,
-        curve: const Interval(0.25, 0.75, curve: Curves.easeOutCubic),
-      ),
-    );
+    _imageFade = CurvedAnimation(parent: _entranceController, curve: const Interval(0.25, 0.7, curve: Curves.easeOut),);
+    _imageScale = Tween<double>(begin: 0.92, end: 1.0).animate(CurvedAnimation(parent: _entranceController, curve: const Interval(0.25, 0.75, curve: Curves.easeOutCubic),),);
 
-    _buttonFade = CurvedAnimation(
-      parent: _entranceController,
-      curve: const Interval(0.55, 1.0, curve: Curves.easeOut),
-    );
-    _buttonSlide = Tween<Offset>(
-      begin: const Offset(0, 0.35),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _entranceController,
-        curve: const Interval(0.55, 1.0, curve: Curves.easeOutCubic),
-      ),
-    );
+    _buttonFade = CurvedAnimation(parent: _entranceController, curve: const Interval(0.55, 1.0, curve: Curves.easeOut),);
+    _buttonSlide = Tween<Offset>(begin: const Offset(0, 0.35), end: Offset.zero,).animate(CurvedAnimation(parent: _entranceController, curve: const Interval(0.55, 1.0, curve: Curves.easeOutCubic),),);
 
-    _breathScale = Tween<double>(begin: 1.0, end: 1.03).animate(
-      CurvedAnimation(parent: _breathController, curve: Curves.easeInOut),
-    );
-
-    _exitFade = Tween<double>(begin: 1.0, end: 0.0).animate(
-      CurvedAnimation(parent: _exitController, curve: Curves.easeIn),
-    );
-    _pressScale = Tween<double>(begin: 1.0, end: 0.92).animate(
-      CurvedAnimation(parent: _pressController, curve: Curves.easeOut),
-    );
+    _breathScale = Tween<double>(begin: 1.0, end: 1.03).animate(CurvedAnimation(parent: _breathController, curve: Curves.easeInOut),);
+    _exitFade = Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(parent: _exitController, curve: Curves.easeIn),);
+    _pressScale = Tween<double>(begin: 1.0, end: 0.92).animate(CurvedAnimation(parent: _pressController, curve: Curves.easeOut),);
 
     _entranceController.forward().then((_) {
       if (mounted) _breathController.repeat(reverse: true);
@@ -171,15 +121,15 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         child: Row(
           mainAxisAlignment: .center,
           children: [
+            //width, height: welcomeTitleLineWidth
             Container(
-              width: NumberConstant.welcomeTitleLineWidth,
-              height: NumberConstant.welcomeTitleLineHeight,
               color: AppColors.blackColor,
             ),
             SizedBox(
               width: NumberConstant.welcomeTitleWidth,
+              //welcomeTitle
               child: Text(
-                StringConst.welcomeTitle,
+                '',
                 textAlign: .center,
                 style: AppTextStyles.welcomeTitle,
               ),
@@ -197,12 +147,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         scale: _imageScale,
         child: ScaleTransition(
           scale: _breathScale,
-          child: Image.asset(
-            AssetRes.welcomePageImg,
-            width: NumberConstant.welcomePlantSize,
-            height: NumberConstant.welcomePlantSize,
-            fit: .contain,
-          ),
+          //welcomePageImage, width:welcomePlantSize, fit: contain
+          child: const SizedBox()
         ),
       ),
     );
@@ -219,11 +165,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             onTap: _onGoPressed,
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.blackColor,
+                // color: AppColors.blackColor,
                 shape: .circle,
               ),
               padding: .all(NumberConstant.goButtonPadding),
-              child: Text(StringConst.go, style: AppTextStyles.goButton),
+              //StringConst.go, goButton
+
             ),
           ),
         ),
